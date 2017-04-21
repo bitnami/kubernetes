@@ -5,6 +5,9 @@ node.data: ${NODE_DATA}
 
 transport.tcp.port: ${TRANSPORT_PORT}
 http.port: ${HTTP_PORT}
+# enable cross-origin resource sharing for the dejavu plugin
+http.cors.allow-origin: "http://127.0.0.1:${HTTP_PORT}"
+http.cors.enabled: true
 
 path.data: /data
 

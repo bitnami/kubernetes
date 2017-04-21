@@ -16,16 +16,27 @@
 
 # The current value of the tag to be used for building and
 # pushing an image to gcr.io
-TAG = v2.4.1
+TAG = v2.4.4-5
 
 build:	elasticsearch_logging_discovery
-	docker build --pull -t gcr.io/google_containers/elasticsearch:$(TAG) .
+	docker build --pull -t gcr.io/bitnami-images/elasticsearch:$(TAG) .
 
 push:
-	gcloud docker -- push gcr.io/google_containers/elasticsearch:$(TAG)
+	gcloud docker -- push gcr.io/bitnami-images/elasticsearch:$(TAG)
+
+bootstrap:
+	docker run \
+      --rm \
+      -v ${PWD}:/go/src/elasticsearch_logging_discovery \
+      golang:1.8.1 \
+      /go/src/elasticsearch_logging_discovery/elasticsearch_logging_discovery_godep.sh
 
 elasticsearch_logging_discovery:
-	go build -a -ldflags "-w" elasticsearch_logging_discovery.go
+	docker run \
+      --rm \
+      -v ${PWD}:/go/src/elasticsearch_logging_discovery \
+      golang:1.8.1 \
+      /bin/sh -c 'cd /go/src/elasticsearch_logging_discovery && go build -a -ldflags "-w" elasticsearch_logging_discovery.go'
 
 clean:
 	rm elasticsearch_logging_discovery
